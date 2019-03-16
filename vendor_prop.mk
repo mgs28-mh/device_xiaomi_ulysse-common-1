@@ -216,6 +216,10 @@ persist.timed.enable=true
 PRODUCT_PROPERTY_OVERRIDES += \
 net.tcp.2g_init_rwnd=10
 
+# VSync for CPU rendered app
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    debug.cpurend.vsync=false
+
 # Trim
 PRODUCT_PROPERTY_OVERRIDES += \
 ro.vendor.qti.sys.fw.use_trim_settings=true \
