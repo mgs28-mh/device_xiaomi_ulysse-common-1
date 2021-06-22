@@ -13,3 +13,6 @@ allow init vendor_configs_file:file mounton;
 
 # LED
 allow init sysfs_leds:file rw_file_perms;
+
+# Transitions to seclabel processes in init.rc
+domain_auto_trans(init, vendor_charger_exec, vendor_charger)
