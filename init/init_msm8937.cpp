@@ -101,9 +101,75 @@ void check_device()
     }
 }
 
+void build_description_override(const char *build_desc)
+{
+    property_override("ro.build.description", build_desc);
+    property_override("ro.build.display.id", build_desc);
+}
+
+void build_fingerprint_override(const char *build_fp)
+{
+    property_override("ro.bootimage.build.fingerprint", build_fp);
+    property_override("ro.build.fingerprint", build_fp);
+    property_override("ro.odm.build.fingerprint", build_fp);
+    property_override("ro.product.build.fingerprint", build_fp);
+    property_override("ro.system.build.fingerprint", build_fp);
+    property_override("ro.system_ext.build.fingerprint", build_fp);
+    property_override("ro.vendor.build.fingerprint", build_fp);
+}
+
+void security_patch_date_override(const char *sp_date)
+{
+//  property_override("ro.build.version.security_patch", sp_date);
+    property_override("ro.vendor.build.security_patch", sp_date);
+}
+
+static void SetSafetyNetProps() {
+    property_override("ro.boot.flash.locked", "1");
+    property_override("ro.boot.verifiedbootstate", "green");
+    property_override("vendor.boot.verifiedbootstate", "green");
+    property_override("ro.boot.veritymode", "enforcing");
+    property_override("ro.boot.vbmeta.device_state", "locked");
+    property_override("vendor.boot.vbmeta.device_state", "locked");
+}
+
+static void build_keys_override(const char *build_keys)
+{
+    property_override("ro.build.tags", build_keys);
+    property_override("ro.odm.build.tags", build_keys);
+    property_override("ro.product.build.tags", build_keys);
+    property_override("ro.system.build.tags", build_keys);
+    property_override("ro.system_ext.build.tags", build_keys);
+    property_override("ro.vendor.build.tags", build_keys);
+}
+
+void set_avoid_gfxaccel_config() {
+    struct sysinfo sys;
+    sysinfo(&sys);
+
+    if (sys.totalram <= 2048ull * 1024 * 1024) {
+        // Reduce memory footprint
+        property_override("ro.config.avoid_gfx_accel", "true");
+    }
+}
+
 void vendor_load_properties()
 {
     check_device();
+
+    set_avoid_gfxaccel_config();
+
+    build_description_override("redfin-user 11 RQ3A.210605.005 7349499 release-keys");
+    build_fingerprint_override("google/redfin/redfin:11/RQ3A.210605.005/7349499:user/release-keys");
+    security_patch_date_override("2021-06-05");
+
+    // Report a valid verified boot chain to make Google SafetyNet integrity
+    // checks pass. This needs to be done before parsing the kernel cmdline as
+    // these properties are read-only and will be set to invalid values with
+    // androidboot cmdline arguments.
+    SetSafetyNetProps();
+
+    build_keys_override("release-keys");
 
     property_set("dalvik.vm.heapstartsize", heapstartsize);
     property_set("dalvik.vm.heapgrowthlimit", heapgrowthlimit);
@@ -111,9 +177,4 @@ void vendor_load_properties()
     property_set("dalvik.vm.heaptargetutilization", heaptargetutilization);
     property_set("dalvik.vm.heapminfree", heapminfree);
     property_set("dalvik.vm.heapmaxfree", heapmaxfree);
-
-    // Pixel identification
-    property_override("ro.build.description","redfin-user 11 RD1A.200810.020 6792687 release-keys");
-    property_override("ro.build.fingerprint","google/redfin/redfin:11/RD1A.200810.020/6792687:user/release-keys");
-    property_override("ro.system.build.fingerprint","google/redfin/redfin:11/RD1A.200810.020/6792687:user/release-keys");
 }
