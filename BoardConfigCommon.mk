@@ -39,6 +39,10 @@ TARGET_SYSTEM_PROP := $(VENDOR_PATH)/system.prop
 
 # Build
 BUILD_BROKEN_DUP_RULES := true
+BUILD_BROKEN_USES_BUILD_COPY_HEADERS := true
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+BUILD_BROKEN_VINTF_PRODUCT_COPY_FILES := true
+BUILD_BROKEN_PREBUILT_ELF_FILES := true
 
 # Kernel
 BOARD_KERNEL_BASE := 0x80000000
@@ -49,16 +53,11 @@ BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100
 TARGET_KERNEL_CONFIG := ulysse_defconfig
 TARGET_KERNEL_SOURCE := kernel/xiaomi/ulysse
 TARGET_KERNEL_VERSION := 4.9
-ifeq ($(TARGET_KERNEL_VERSION),4.9)
+TARGET_KERNEL_CLANG_PATH := $(shell pwd)/prebuilts/clang/host/linux-x86/gabuters-clang
 BOARD_KERNEL_CMDLINE += androidboot.usbconfigfs=true
 TARGET_KERNEL_CLANG_COMPILE := true
-else ifeq ($(TARGET_KERNEL_VERSION),3.18)
 TARGET_KERNEL_ARCH := arm64
 TARGET_COMPILE_WITH_MSM_KERNEL := true
-endif
-ifneq ($(wildcard vendor/qcom/sdclang-8.0/linux-x86_64),)
-TARGET_KERNEL_CLANG_PATH := $(PWD)/vendor/qcom/sdclang-8.0/linux-x86_64
-endif
 
 # ANT
 BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
