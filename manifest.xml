@@ -421,6 +421,15 @@
         <fqname>@1.0::IIWlan/slot1</fqname>
         <fqname>@1.0::IIWlan/slot2</fqname>
     </hal>
+       <hal format="hidl">
+       <name>vendor.qti.hardware.cacert</name>
+       <transport>hwbinder</transport>
+       <version>1.0</version>
+       <interface>
+        <name>IService</name>
+        <instance>default</instance>
+       </interface>
+    </hal>
     <hal format="hidl">
         <name>vendor.qti.data.factory</name>
         <transport>hwbinder</transport>
@@ -469,7 +478,7 @@
     <hal format="hidl">
         <name>vendor.qti.hardware.perf</name>
         <transport>hwbinder</transport>
-        <version>2.0</version>
+        <version>2.1</version>
         <interface>
             <name>IPerf</name>
             <instance>default</instance>
